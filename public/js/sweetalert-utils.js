@@ -9,34 +9,30 @@ const SweetAlertConfig = {
     success: {
         confirmButtonColor: '#28a745',
         timer: 3000,
-        timerProgressBar: true,
-        showConfirmButton: false,
-        position: 'top-end',
-        toast: true
+        timerProgressBar: true
     },
-
+    
     // Error alerts
     error: {
         confirmButtonColor: '#d33',
         timer: 4000,
-        timerProgressBar: true,
-        showConfirmButton: true
+        timerProgressBar: true
     },
-
+    
     // Warning alerts
     warning: {
         confirmButtonColor: '#ffc107',
         cancelButtonColor: '#6c757d',
         showCancelButton: true
     },
-
+    
     // Info alerts
     info: {
         confirmButtonColor: '#17a2b8',
         timer: 3000,
         timerProgressBar: true
     },
-
+    
     // Question/Confirmation alerts
     question: {
         confirmButtonColor: '#3085d6',
@@ -84,109 +80,6 @@ function showInfo(title, message) {
         icon: 'info',
         ...SweetAlertConfig.info
     });
-}
-
-// CRUD Operation Success Messages
-function showCreateSuccess(itemName = 'Data', itemType = 'item') {
-    return showSuccess(
-        'Berhasil Dibuat!',
-        `${itemName} berhasil ditambahkan ke database.`
-    );
-}
-
-function showReadSuccess(itemName = 'Data', itemType = 'item') {
-    return showInfo(
-        'Data Ditemukan!',
-        `${itemName} berhasil dimuat dari database.`
-    );
-}
-
-function showUpdateSuccess(itemName = 'Data', itemType = 'item') {
-    return showSuccess(
-        'Berhasil Diupdate!',
-        `${itemName} berhasil diperbarui di database.`
-    );
-}
-
-function showDeleteSuccess(itemName = 'Data', itemType = 'item') {
-    return showSuccess(
-        'Berhasil Dihapus!',
-        `${itemName} berhasil dihapus dari database.`
-    );
-}
-
-// Order Operation Success Messages
-function showOrderSuccess(orderNumber = '') {
-    return showSuccess(
-        'Pesanan Berhasil!',
-        `Pesanan ${orderNumber} berhasil dibuat dan diproses.`
-    );
-}
-
-function showOrderUpdateSuccess(orderNumber = '') {
-    return showSuccess(
-        'Pesanan Diupdate!',
-        `Status pesanan ${orderNumber} berhasil diperbarui.`
-    );
-}
-
-function showOrderCancelSuccess(orderNumber = '') {
-    return showSuccess(
-        'Pesanan Dibatalkan!',
-        `Pesanan ${orderNumber} berhasil dibatalkan.`
-    );
-}
-
-// Profile Operation Success Messages
-function showProfileUpdateSuccess() {
-    return showSuccess(
-        'Profil Diupdate!',
-        'Data profil Anda berhasil diperbarui.'
-    );
-}
-
-function showPasswordChangeSuccess() {
-    return showSuccess(
-        'Password Diubah!',
-        'Password Anda berhasil diubah.'
-    );
-}
-
-// Authentication Success Messages
-function showLoginSuccess(userName = '') {
-    return showSuccess(
-        'Login Berhasil!',
-        `Selamat datang kembali, ${userName}!`
-    );
-}
-
-function showLogoutSuccess() {
-    return showSuccess(
-        'Logout Berhasil!',
-        'Anda berhasil keluar dari sistem.'
-    );
-}
-
-function showRegisterSuccess(userName = '') {
-    return showSuccess(
-        'Registrasi Berhasil!',
-        `Selamat datang, ${userName}! Akun Anda berhasil dibuat.`
-    );
-}
-
-// Stock Operation Messages
-function showStockUpdateSuccess(itemName = '', newStock = '') {
-    return showSuccess(
-        'Stok Diupdate!',
-        `Stok ${itemName} berhasil diperbarui menjadi ${newStock} ekor.`
-    );
-}
-
-function showLowStockWarning(itemName = '', currentStock = '') {
-    return showWarning(
-        'Stok Menipis!',
-        `Stok ${itemName} tersisa ${currentStock} ekor. Silakan tambah stok.`
-    );
 }
 
 // Confirmation dialog
@@ -278,32 +171,30 @@ function handleFormSubmission(formId, options = {}) {
         cancelText = 'Batal',
         loadingTitle = 'Memproses...',
         loadingMessage = 'Mohon tunggu sebentar',
-        validateFunction = null,
-        successMessage = 'Data berhasil disimpan!',
-        successTitle = 'Berhasil!'
+        validateFunction = null
     } = options;
 
-    form.addEventListener('submit', function (e) {
+    form.addEventListener('submit', function(e) {
         e.preventDefault();
-
+        
         // Basic form validation
         if (!this.checkValidity()) {
             this.reportValidity();
             return;
         }
-
+        
         // Custom validation if provided
         if (validateFunction && !validateFunction()) {
             return;
         }
-
+        
         // Show confirmation dialog
         showFormConfirm(confirmTitle, confirmMessage, confirmText, cancelText)
             .then((result) => {
                 if (result.isConfirmed) {
                     // Show loading state
                     showLoading(loadingTitle, loadingMessage);
-
+                    
                     // Submit the form
                     this.submit();
                 }
@@ -318,22 +209,22 @@ function handleDeleteItem(deleteUrl, itemName, itemType = 'item') {
             if (result.isConfirmed) {
                 // Show loading state
                 showLoading('Menghapus...', 'Mohon tunggu sebentar');
-
+                
                 // Create and submit delete form
                 const form = document.createElement('form');
                 form.method = 'POST';
                 form.action = deleteUrl;
-
+                
                 const csrfToken = document.createElement('input');
                 csrfToken.type = 'hidden';
                 csrfToken.name = '_token';
                 csrfToken.value = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
+                
                 const methodField = document.createElement('input');
                 methodField.type = 'hidden';
                 methodField.name = '_method';
                 methodField.value = 'DELETE';
-
+                
                 form.appendChild(csrfToken);
                 form.appendChild(methodField);
                 document.body.appendChild(form);
@@ -355,37 +246,18 @@ window.SweetAlertUtils = {
     validateStock,
     validatePassword,
     handleFormSubmission,
-    handleDeleteItem,
-    // CRUD Success Messages
-    showCreateSuccess,
-    showReadSuccess,
-    showUpdateSuccess,
-    showDeleteSuccess,
-    // Order Success Messages
-    showOrderSuccess,
-    showOrderUpdateSuccess,
-    showOrderCancelSuccess,
-    // Profile Success Messages
-    showProfileUpdateSuccess,
-    showPasswordChangeSuccess,
-    // Authentication Success Messages
-    showLoginSuccess,
-    showLogoutSuccess,
-    showRegisterSuccess,
-    // Stock Messages
-    showStockUpdateSuccess,
-    showLowStockWarning
+    handleDeleteItem
 };
 
 // Auto-initialize common form handlers
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
     // Auto-handle forms with data-sweetalert attribute
     const sweetAlertForms = document.querySelectorAll('[data-sweetalert]');
     sweetAlertForms.forEach(form => {
         const options = JSON.parse(form.dataset.sweetalert || '{}');
         handleFormSubmission(form.id, options);
     });
-
+    
     // Auto-handle delete buttons with data-delete attribute
     const deleteButtons = document.querySelectorAll('[data-delete]');
     deleteButtons.forEach(button => {
