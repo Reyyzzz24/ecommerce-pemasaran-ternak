@@ -153,14 +153,30 @@
 
                 {{-- Menu Items --}}
                 <ul class="nav flex-column">
-                    <li class="nav-item"><a class="nav-link text-dark font-bold" style="color:#222 !important;"
-                            href="{{ url('home') }}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark font-bold" style="color:#222 !important;"
-                            href="{{ url('history') }}">Riwayat Pemesanan</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark font-bold" style="color:#222 !important;"
+                            href="{{ url('home') }}">Home</a>
+                    </li>
 
                     @auth
-                        <li class="nav-item"><a class="nav-link text-dark font-bold" style="color:#222 !important;"
-                                href="{{ url('profile') }}">Profile</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark font-bold" style="color:#222 !important;"
+                                href="{{ url('history') }}">
+                                Riwayat Pemesanan
+                            </a>
+                        </li>
+
+                        @if (Auth::user()->role == 'admin')
+                            <li class="nav-item">
+                                <a class="nav-link text-dark font-bold"
+                                    href="{{ route('admin.barang.index') }}">Admin</a>
+                            </li>
+                        @endif
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark font-bold" style="color:#222 !important;"
+                                href="{{ url('profile') }}">Profile</a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-danger font-bold" href="{{ route('logout') }}"
                                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -169,14 +185,20 @@
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf
                             </form>
                         </li>
-                    @else
-                        <li class="nav-item"><a class="nav-link text-dark font-bold" style="color:#222 !important;"
-                                href="{{ route('login') }}">Login</a></li>
-                        @if (Route::has('register'))
-                            <li class="nav-item"><a class="nav-link text-dark font-bold" style="color:#222 !important;"
-                                    href="{{ route('register') }}">Register</a></li>
-                        @endif
                     @endauth
+
+                    @guest
+                        <li class="nav-item">
+                            <a class="nav-link text-dark font-bold" style="color:#222 !important;"
+                                href="{{ route('login') }}">Login</a>
+                        </li>
+                        @if (Route::has('register'))
+                            <li class="nav-item">
+                                <a class="nav-link text-dark font-bold" style="color:#222 !important;"
+                                    href="{{ route('register') }}">Register</a>
+                            </li>
+                        @endif
+                    @endguest
                 </ul>
             </div>
         </div>
