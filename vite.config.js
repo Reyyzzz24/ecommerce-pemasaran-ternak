@@ -11,4 +11,14 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    css: {
+        preprocessorOptions: {
+            scss: {
+                // Suppress Sass deprecation warnings
+                quietDeps: true,
+                // Suppress specific deprecation warnings
+                silenceDeprecations: ['import', 'global-builtin', 'color-functions', 'mixed-decls'],
+            },
+        },
+    },
 });
