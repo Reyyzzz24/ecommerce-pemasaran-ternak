@@ -27,7 +27,7 @@
 
             <div class="d-flex gap-2 mb-3">
                 <a href="{{ route('admin.barang.create') }}" class="btn btn-success">
-                    <i class="fa fa-plus"></i> + Tambah Barang
+                    <i class="fa fa-plus"></i> Tambah Barang
                 </a>
             </div>
 

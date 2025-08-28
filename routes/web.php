@@ -26,7 +26,7 @@ Route::get('profile', [ProfileController::class, 'index']);
 Route::post('profile', [ProfileController::class, 'update']);
 
 Route::get('history', [HistoryController::class, 'index']);
-Route::get('history/{id}', [HistoryController::class, 'detail']);
+Route::get('history/{id}', [HistoryController::class, 'detail'])->name('history.detail');
 
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 
