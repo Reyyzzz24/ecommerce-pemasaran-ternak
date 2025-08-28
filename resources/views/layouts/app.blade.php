@@ -19,8 +19,48 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
     <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('js/sweetalert.all.js') }}?v=1.0" onload="console.log('SweetAlert script loaded successfully')" onerror="console.error('Failed to load SweetAlert script')"></script>
+    <script>
+        // Debug: Check if SweetAlert loaded
+        console.log('SweetAlert loading...');
+        console.log('Script tag added to DOM');
+        
+        // Wait for SweetAlert to load
+        function checkSweetAlert() {
+            console.log('Checking SweetAlert availability...');
+            if (typeof Swal !== 'undefined') {
+                console.log('✅ SweetAlert loaded successfully!');
+                console.log('Version:', Swal.version);
+                console.log('Swal object:', Swal);
+            } else {
+                console.log('❌ SweetAlert failed to load!');
+                console.log('Swal type:', typeof Swal);
+                console.log('Available global objects:', Object.keys(window).filter(key => key.toLowerCase().includes('swal')));
+            }
+        }
+        
+        // Check after a delay to ensure script is loaded
+        setTimeout(checkSweetAlert, 500);
+        setTimeout(checkSweetAlert, 1000);
+        setTimeout(checkSweetAlert, 2000);
+    </script>
     <script src="{{ asset('js/sweetalert-utils.js') }}"></script>
+    
+    <!-- Test SweetAlert inline -->
+    <script>
+        // Test SweetAlert after everything loads
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                if (typeof Swal !== 'undefined') {
+                    console.log('✅ SweetAlert is available on window load!');
+                    // SweetAlert is available
+                    console.log('SweetAlert is ready to use');
+                } else {
+                    console.log('❌ SweetAlert still not available on window load!');
+                }
+            }, 2000);
+        });
+    </script>
 
 </head>
 
