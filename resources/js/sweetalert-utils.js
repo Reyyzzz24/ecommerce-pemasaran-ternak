@@ -9,18 +9,14 @@ const SweetAlertConfig = {
     success: {
         confirmButtonColor: '#28a745',
         timer: 3000,
-        timerProgressBar: true,
-        showConfirmButton: false,
-        position: 'top-end',
-        toast: true
+        timerProgressBar: true
     },
 
     // Error alerts
     error: {
         confirmButtonColor: '#d33',
         timer: 4000,
-        timerProgressBar: true,
-        showConfirmButton: true
+        timerProgressBar: true
     },
 
     // Warning alerts
@@ -84,109 +80,6 @@ function showInfo(title, message) {
         icon: 'info',
         ...SweetAlertConfig.info
     });
-}
-
-// CRUD Operation Success Messages
-function showCreateSuccess(itemName = 'Data', itemType = 'item') {
-    return showSuccess(
-        'Berhasil Dibuat!',
-        `${itemName} berhasil ditambahkan ke database.`
-    );
-}
-
-function showReadSuccess(itemName = 'Data', itemType = 'item') {
-    return showInfo(
-        'Data Ditemukan!',
-        `${itemName} berhasil dimuat dari database.`
-    );
-}
-
-function showUpdateSuccess(itemName = 'Data', itemType = 'item') {
-    return showSuccess(
-        'Berhasil Diupdate!',
-        `${itemName} berhasil diperbarui di database.`
-    );
-}
-
-function showDeleteSuccess(itemName = 'Data', itemType = 'item') {
-    return showSuccess(
-        'Berhasil Dihapus!',
-        `${itemName} berhasil dihapus dari database.`
-    );
-}
-
-// Order Operation Success Messages
-function showOrderSuccess(orderNumber = '') {
-    return showSuccess(
-        'Pesanan Berhasil!',
-        `Pesanan ${orderNumber} berhasil dibuat dan diproses.`
-    );
-}
-
-function showOrderUpdateSuccess(orderNumber = '') {
-    return showSuccess(
-        'Pesanan Diupdate!',
-        `Status pesanan ${orderNumber} berhasil diperbarui.`
-    );
-}
-
-function showOrderCancelSuccess(orderNumber = '') {
-    return showSuccess(
-        'Pesanan Dibatalkan!',
-        `Pesanan ${orderNumber} berhasil dibatalkan.`
-    );
-}
-
-// Profile Operation Success Messages
-function showProfileUpdateSuccess() {
-    return showSuccess(
-        'Profil Diupdate!',
-        'Data profil Anda berhasil diperbarui.'
-    );
-}
-
-function showPasswordChangeSuccess() {
-    return showSuccess(
-        'Password Diubah!',
-        'Password Anda berhasil diubah.'
-    );
-}
-
-// Authentication Success Messages
-function showLoginSuccess(userName = '') {
-    return showSuccess(
-        'Login Berhasil!',
-        `Selamat datang kembali, ${userName}!`
-    );
-}
-
-function showLogoutSuccess() {
-    return showSuccess(
-        'Logout Berhasil!',
-        'Anda berhasil keluar dari sistem.'
-    );
-}
-
-function showRegisterSuccess(userName = '') {
-    return showSuccess(
-        'Registrasi Berhasil!',
-        `Selamat datang, ${userName}! Akun Anda berhasil dibuat.`
-    );
-}
-
-// Stock Operation Messages
-function showStockUpdateSuccess(itemName = '', newStock = '') {
-    return showSuccess(
-        'Stok Diupdate!',
-        `Stok ${itemName} berhasil diperbarui menjadi ${newStock} ekor.`
-    );
-}
-
-function showLowStockWarning(itemName = '', currentStock = '') {
-    return showWarning(
-        'Stok Menipis!',
-        `Stok ${itemName} tersisa ${currentStock} ekor. Silakan tambah stok.`
-    );
 }
 
 // Confirmation dialog
@@ -278,9 +171,7 @@ function handleFormSubmission(formId, options = {}) {
         cancelText = 'Batal',
         loadingTitle = 'Memproses...',
         loadingMessage = 'Mohon tunggu sebentar',
-        validateFunction = null,
-        successMessage = 'Data berhasil disimpan!',
-        successTitle = 'Berhasil!'
+        validateFunction = null
     } = options;
 
     form.addEventListener('submit', function (e) {
@@ -355,26 +246,7 @@ window.SweetAlertUtils = {
     validateStock,
     validatePassword,
     handleFormSubmission,
-    handleDeleteItem,
-    // CRUD Success Messages
-    showCreateSuccess,
-    showReadSuccess,
-    showUpdateSuccess,
-    showDeleteSuccess,
-    // Order Success Messages
-    showOrderSuccess,
-    showOrderUpdateSuccess,
-    showOrderCancelSuccess,
-    // Profile Success Messages
-    showProfileUpdateSuccess,
-    showPasswordChangeSuccess,
-    // Authentication Success Messages
-    showLoginSuccess,
-    showLogoutSuccess,
-    showRegisterSuccess,
-    // Stock Messages
-    showStockUpdateSuccess,
-    showLowStockWarning
+    handleDeleteItem
 };
 
 // Auto-initialize common form handlers

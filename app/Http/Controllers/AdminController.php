@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Barang;
 use Illuminate\Http\Request;
-use RealRashid\SweetAlert\Facades\Alert;
+
 
 class AdminController extends Controller
 {
@@ -40,7 +40,7 @@ class AdminController extends Controller
                 $filename = '';
             }
 
-            Barang::create([
+            $barang = Barang::create([
                 'nama_barang' => $request->nama_barang,
                 'gambar' => $filename,
                 'harga' => $request->harga,
@@ -48,11 +48,9 @@ class AdminController extends Controller
                 'keterangan' => $request->keterangan,
             ]);
 
-            Alert::success('Berhasil!', 'Barang berhasil ditambahkan ke database.');
-            return redirect()->route('admin.barang.index');
+            return redirect()->route('admin.barang.index')->with('success', 'Barang "' . $barang->nama_barang . '" berhasil ditambahkan ke database dengan stok ' . $barang->stok . ' ekor.');
         } catch (\Exception $e) {
-            Alert::error('Gagal!', 'Terjadi kesalahan saat menambahkan barang. Silakan coba lagi.');
-            return back()->withInput();
+            return back()->withInput()->with('error', 'Terjadi kesalahan saat menambahkan barang: ' . $e->getMessage());
         }
     }
 
@@ -61,20 +59,23 @@ class AdminController extends Controller
     {
         try {
             $barang = Barang::findOrFail($id);
+            $namaBarang = $barang->nama_barang;
             $barang->delete();
 
-            Alert::success('Berhasil!', 'Barang berhasil dihapus dari database.');
-            return redirect()->route('admin.barang.index');
+            return redirect()->route('admin.barang.index')->with('success', 'Barang "' . $namaBarang . '" berhasil dihapus dari database.');
         } catch (\Exception $e) {
-            Alert::error('Gagal!', 'Terjadi kesalahan saat menghapus barang. Silakan coba lagi.');
-            return back();
+            return back()->with('error', 'Terjadi kesalahan saat menghapus barang: ' . $e->getMessage());
         }
     }
 
     public function edit($id)
     {
-        $barang = Barang::findOrFail($id);
-        return view('admin.barang.edit', compact('barang'));
+        try {
+            $barang = Barang::findOrFail($id);
+            return view('admin.barang.edit', compact('barang'));
+        } catch (\Exception $e) {
+            return redirect()->route('admin.barang.index')->with('error', 'Barang tidak ditemukan: ' . $e->getMessage());
+        }
     }
 
     public function update(Request $request, $id)
@@ -89,6 +90,9 @@ class AdminController extends Controller
         ]);
 
         try {
+            $oldStock = $barang->stok;
+            $oldName = $barang->nama_barang;
+            
             // Proses upload gambar baru jika ada
             if ($request->hasFile('gambar')) {
                 $file = $request->file('gambar');
@@ -103,11 +107,23 @@ class AdminController extends Controller
             $barang->keterangan = $request->keterangan;
             $barang->save();
 
-            Alert::success('Berhasil!', 'Data barang berhasil diupdate.');
-            return redirect()->route('admin.barang.index');
+            // Show different messages based on what changed
+            $changes = [];
+            if ($oldName !== $request->nama_barang) {
+                $changes[] = 'nama barang dari "' . $oldName . '" menjadi "' . $request->nama_barang . '"';
+            }
+            if ($oldStock !== $request->stok) {
+                $changes[] = 'stok dari ' . $oldStock . ' menjadi ' . $request->stok . ' ekor';
+            }
+            if ($request->hasFile('gambar')) {
+                $changes[] = 'gambar produk';
+            }
+            
+            $changeMessage = count($changes) > 0 ? 'Perubahan: ' . implode(', ', $changes) : 'Data berhasil diperbarui';
+            
+            return redirect()->route('admin.barang.index')->with('success', $changeMessage);
         } catch (\Exception $e) {
-            Alert::error('Gagal!', 'Terjadi kesalahan saat mengupdate barang. Silakan coba lagi.');
-            return back()->withInput();
+            return back()->withInput()->with('error', 'Terjadi kesalahan saat mengupdate barang: ' . $e->getMessage());
         }
     }
 }

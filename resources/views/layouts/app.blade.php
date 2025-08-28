@@ -5,34 +5,98 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts & Icons -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-          crossorigin="anonymous">
-
+        crossorigin="anonymous">
     <!-- Custom Styles -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- SweetAlert2 - Simple Implementation -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Simple SweetAlert utility functions
+        window.SweetAlert = {
+            success: function(title, message) {
+                Swal.fire({
+                    title: title || 'Berhasil!',
+                    text: message,
+                    icon: 'success',
+                    confirmButtonColor: '#28a745'
+                });
+            },
+            error: function(title, message) {
+                Swal.fire({
+                    title: title || 'Gagal!',
+                    text: message,
+                    icon: 'error',
+                    confirmButtonColor: '#d33'
+                });
+            },
+            warning: function(title, message) {
+                Swal.fire({
+                    title: title || 'Peringatan!',
+                    text: message,
+                    icon: 'warning',
+                    confirmButtonColor: '#ffc107'
+                });
+            },
+            confirm: function(title, message, callback) {
+                Swal.fire({
+                    title: title || 'Konfirmasi',
+                    text: message,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Ya',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed && callback) {
+                        callback();
+                    }
+                });
+            }
+        };
+    </script>
+
 </head>
 
-<body class="d-flex flex-column min-vh-100">
+<body>
     <div id="app">
+        <!-- Flash Messages -->
+        @if(session('success'))
+            <script>
+                SweetAlert.success('Berhasil!', '{{ session('success') }}');
+            </script>
+        @endif
+        
+        @if(session('error'))
+            <script>
+                SweetAlert.error('Gagal!', '{{ session('error') }}');
+            </script>
+        @endif
+        
+        @if(session('warning'))
+            <script>
+                SweetAlert.warning('Peringatan!', '{{ session('warning') }}');
+            </script>
+        @endif
+        
         {{-- Navbar hanya muncul di home.blade.php --}}
         @if (Request::is('home') || Request::is('/'))
             <nav class="navbar navbar-expand-md navbar-light bg-transparent" style="z-index:10;">
                 <div class="container align-items-center">
-
                     {{-- Logo --}}
                     <a class="navbar-brand text-white font-bold" href="{{ url('/') }}">
                         <img src="{{ url('images/logo.png') }}" width="70" alt="Berkah Tani"
-                             style="filter: brightness(0) invert(1);">
+                            style="filter: brightness(0) invert(1);">
                     </a>
-
                     {{-- Desktop Menu --}}
                     <ul class="navbar-nav d-none d-md-flex ms-3">
                         <li class="nav-item">
@@ -40,15 +104,12 @@
                         </li>
                         @auth
                             <li class="nav-item">
-                                <a class="nav-link text-white font-bold" href="{{ url('history') }}">
-                                    Riwayat Pemesanan
-                                </a>
+                                <a class="nav-link text-white font-bold" href="{{ url('history') }}">Riwayat Pemesanan</a>
                             </li>
                             @if (Auth::user()->role == 'admin')
                                 <li class="nav-item">
-                                    <a class="nav-link text-white font-bold" href="{{ route('admin.barang.index') }}">
-                                        Admin
-                                    </a>
+                                    <a class="nav-link text-white font-bold"
+                                        href="{{ route('admin.barang.index') }}">Admin</a>
                                 </li>
                             @endif
                         @endauth
@@ -69,7 +130,8 @@
                             <a class="nav-link position-relative text-white p-0 me-2" href="{{ url('check-out') }}">
                                 <i class="fa fa-shopping-cart fa-lg"></i>
                                 @if ($notif)
-                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    <span
+                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                         {{ $notif }}
                                     </span>
                                 @endif
@@ -78,8 +140,8 @@
 
                         {{-- Burger --}}
                         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
-                                data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu"
-                                style="border:none;box-shadow:none;margin-top:-8px;">
+                            data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu"
+                            style="border:none;box-shadow:none;margin-top:-8px;">
                             <span class="navbar-toggler-icon" style="filter: brightness(0) invert(1);"></span>
                         </button>
                     </div>
@@ -91,7 +153,8 @@
                             <a class="nav-link position-relative text-white font-bold" href="{{ url('check-out') }}">
                                 <i class="fa fa-shopping-cart fa-lg"></i>
                                 @if ($notif)
-                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    <span
+                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                         {{ $notif }}
                                     </span>
                                 @endif
@@ -107,9 +170,9 @@
                         @else
                             <li class="nav-item dropdown list-unstyled" style="position:relative;z-index:99999;">
                                 <a id="navbarDropdown"
-                                   class="nav-link dropdown-toggle text-white font-bold d-flex align-items-center gap-2"
-                                   href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
-                                   aria-expanded="false">
+                                    class="nav-link dropdown-toggle text-white font-bold d-flex align-items-center gap-2"
+                                    href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
                                     <i class="fas fa-user-circle fa-lg"></i>
                                     {{ Auth::user()->name }}
                                 </a>
@@ -120,7 +183,7 @@
                                     </li>
                                     <li>
                                         <a class="dropdown-item text-danger" href="{{ route('logout') }}"
-                                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                             {{ __('Logout') }}
                                         </a>
                                     </li>
@@ -128,6 +191,7 @@
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                     @csrf
                                 </form>
+
                             </li>
                         @endguest
                     </div>
@@ -156,43 +220,48 @@
                 {{-- Menu Items --}}
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link text-dark font-bold" href="{{ url('home') }}">Home</a>
+                        <a class="nav-link text-dark font-bold" style="color:#222 !important;"
+                            href="{{ url('home') }}">Home</a>
                     </li>
 
                     @auth
                         <li class="nav-item">
-                            <a class="nav-link text-dark font-bold" href="{{ url('history') }}">
+                            <a class="nav-link text-dark font-bold" style="color:#222 !important;"
+                                href="{{ url('history') }}">
                                 Riwayat Pemesanan
                             </a>
                         </li>
+
                         @if (Auth::user()->role == 'admin')
                             <li class="nav-item">
-                                <a class="nav-link text-dark font-bold" href="{{ route('admin.barang.index') }}">
-                                    Admin
-                                </a>
+                                <a class="nav-link text-dark font-bold"
+                                    href="{{ route('admin.barang.index') }}">Admin</a>
                             </li>
                         @endif
+
                         <li class="nav-item">
-                            <a class="nav-link text-dark font-bold" href="{{ url('profile') }}">Profile</a>
+                            <a class="nav-link text-dark font-bold" style="color:#222 !important;"
+                                href="{{ url('profile') }}">Profile</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-danger font-bold" href="{{ route('logout') }}"
-                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 Logout
                             </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                @csrf
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf
                             </form>
                         </li>
                     @endauth
 
                     @guest
                         <li class="nav-item">
-                            <a class="nav-link text-dark font-bold" href="{{ route('login') }}">Login</a>
+                            <a class="nav-link text-dark font-bold" style="color:#222 !important;"
+                                href="{{ route('login') }}">Login</a>
                         </li>
                         @if (Route::has('register'))
                             <li class="nav-item">
-                                <a class="nav-link text-dark font-bold" href="{{ route('register') }}">Register</a>
+                                <a class="nav-link text-dark font-bold" style="color:#222 !important;"
+                                    href="{{ route('register') }}">Register</a>
                             </li>
                         @endif
                     @endguest
@@ -206,23 +275,9 @@
         </main>
     </div>
 
-    {{-- Footer --}}
-    <footer class="bg-dark text-white text-center py-4 mt-auto">
-        <div class="footer-icons mb-3">
-            <a href="https://www.facebook.com/adang.pardiman/" class="mx-2" target="_blank" rel="noopener">
-                <i class="fa-brands fa-facebook" style="font-size: 1.25rem"></i>
-            </a>
-            <a href="https://www.youtube.com/@adangpardiman44" class="mx-2" target="_blank" rel="noopener">
-                <i class="fa-brands fa-youtube" style="font-size: 1.25rem;"></i>
-            </a>
-            <a href="https://www.tiktok.com/@user9061794311645" class="mx-2" target="_blank" rel="noopener">
-                <i class="fa-brands fa-tiktok" style="font-size: 1.25rem;"></i>
-            </a>
-        </div>
-        <p class="mb-0">&#169; 2025 ᴍᴀᴅᴇ ʙʏ ʀᴇᴠᴀ ʏᴜʟɪᴀɴ sᴀᴛʀɪᴀ</p>
-    </footer>
-
     {{-- SweetAlert --}}
-    @include('sweetalert::alert')
+
+
 </body>
+
 </html>

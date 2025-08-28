@@ -29,12 +29,6 @@
                 <a href="{{ route('admin.barang.create') }}" class="btn btn-success">
                     <i class="fa fa-plus"></i> + Tambah Barang
                 </a>
-                <a href="{{ route('admin.sweetalert.demo') }}" class="btn btn-info">
-                    <i class="fa fa-magic"></i> SweetAlert Demo
-                </a>
-                <a href="{{ route('admin.sweetalert.test') }}" class="btn btn-warning">
-                    <i class="fa fa-bug"></i> SweetAlert Test
-                </a>
             </div>
 
             <!-- Tambahkan table-responsive -->
