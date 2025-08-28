@@ -8,7 +8,7 @@
                 <div class="card-header">{{ __('Register') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
+                    <form id="registerForm" method="POST" action="{{ route('register') }}">
                         @csrf
 
                         <div class="row mb-3">
@@ -63,8 +63,8 @@
 
                         <div class="row mb-0">
                             <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Register') }}
+                                <button type="submit" class="btn btn-primary" id="registerBtn">
+                                    <i class="fa fa-user-plus"></i> {{ __('Register') }}
                                 </button>
                             </div>
                         </div>
@@ -75,3 +75,63 @@
     </div>
 </div>
 @endsection
+
+<script>
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Validate form
+    if (!this.checkValidity()) {
+        this.reportValidity();
+        return;
+    }
+    
+    // Check if passwords match
+    const password = document.getElementById('password').value;
+    const passwordConfirm = document.getElementById('password-confirm').value;
+    
+    if (password !== passwordConfirm) {
+        Swal.fire({
+            title: 'Password Tidak Cocok!',
+            text: 'Password dan konfirmasi password harus sama.',
+            icon: 'error',
+            confirmButtonColor: '#d33',
+            confirmButtonText: 'OK'
+        });
+        return;
+    }
+    
+    // Show confirmation dialog
+    Swal.fire({
+        title: 'Konfirmasi Registrasi',
+        text: 'Apakah Anda yakin ingin mendaftar dengan data yang telah diisi?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Ya, Daftar!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Show loading state
+            const registerBtn = document.getElementById('registerBtn');
+            
+            registerBtn.disabled = true;
+            registerBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Mendaftar...';
+            
+            // Show loading alert
+            Swal.fire({
+                title: 'Mendaftar...',
+                text: 'Mohon tunggu sebentar',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            
+            // Submit the form
+            this.submit();
+        }
+    });
+});
+</script>

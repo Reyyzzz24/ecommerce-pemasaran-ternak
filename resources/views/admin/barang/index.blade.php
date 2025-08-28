@@ -59,12 +59,14 @@
                             <td>{{ $barang->keterangan }}</td>
                             <td class="d-flex flex-wrap gap-1">
                                 <a href="{{ route('admin.barang.edit', $barang->id) }}" class="btn btn-warning btn-sm">
-                                    Edit
+                                    <i class="fa fa-edit"></i> Edit
                                 </a>
-                                <form action="{{ route('admin.barang.destroy', $barang->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $barang->id }}, '{{ $barang->nama_barang }}')">
+                                    <i class="fa fa-trash"></i> Hapus
+                                </button>
+                                <form id="delete-form-{{ $barang->id }}" action="{{ route('admin.barang.destroy', $barang->id) }}" method="POST" style="display: none;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
                                 </form>
                             </td>
                         </tr>
@@ -79,4 +81,35 @@
         </div>
     </div>
 </div>
+
+<script>
+function confirmDelete(id, namaBarang) {
+    Swal.fire({
+        title: 'Apakah Anda yakin?',
+        text: `Anda akan menghapus barang "${namaBarang}" secara permanen!`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Show loading state
+            Swal.fire({
+                title: 'Menghapus...',
+                text: 'Mohon tunggu sebentar',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            
+            // Submit the form
+            document.getElementById(`delete-form-${id}`).submit();
+        }
+    });
+}
+</script>
 @endsection

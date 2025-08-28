@@ -6,7 +6,7 @@ use App\Models\Pesanan;
 use App\Models\User;
 use App\Models\PesananDetail;
 use Illuminate\Support\Facades\Auth;
-use Alert;
+use RealRashid\SweetAlert\Facades\Alert;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 /* use Illuminate\Support\Facades\Auth; */
@@ -72,7 +72,7 @@ class PesanController extends Controller
 
     		$pesanan_detail->jumlah = $pesanan_detail->jumlah+$request->jumlah_pesan;
 
-    		//harga sekarang
+    		//harga sekarangA
     		$harga_pesanan_detail_baru = $barang->harga*$request->jumlah_pesan;
 	    	$pesanan_detail->jumlah_harga = $pesanan_detail->jumlah_harga+$harga_pesanan_detail_baru;
 	    	$pesanan_detail->update();
@@ -83,7 +83,7 @@ class PesanController extends Controller
     	$pesanan->jumlah_harga = $pesanan->jumlah_harga+$barang->harga*$request->jumlah_pesan;
     	$pesanan->update();
     	
-    Alert()->success('Pesanan Sukses Masuk Keranjang', 'Success');
+    Alert::success('Pesanan Sukses Masuk Keranjang', 'Success');
     return redirect('check-out');
 
     }
@@ -112,7 +112,7 @@ class PesanController extends Controller
 
         $pesanan_detail->delete();
 
-    Alert()->error('Pesanan Sukses Dihapus', 'Hapus');
+    Alert::error('Pesanan Sukses Dihapus', 'Hapus');
         return redirect('check-out');
     }
 
@@ -122,13 +122,13 @@ class PesanController extends Controller
 
         if(empty($user->alamat))
         {
-            Alert()->error('Identitasi Harap dilengkapi', 'Error');
+            Alert::error('Identitasi Harap dilengkapi', 'Error');
             return redirect('profile');
         }
 
         if(empty($user->nohp))
         {
-            Alert()->error('Identitasi Harap dilengkapi', 'Error');
+            Alert::error('Identitasi Harap dilengkapi', 'Error');
             return redirect('profile');
         }
 
@@ -146,7 +146,7 @@ class PesanController extends Controller
 
 
 
-    Alert()->success('Pesanan Sukses Check Out Silahkan Lanjutkan Proses Pembayaran', 'Success');
+    Alert::success('Pesanan Sukses Check Out Silahkan Lanjutkan Proses Pembayaran', 'Success');
         return redirect('history/'.$pesanan_id);
 
     }

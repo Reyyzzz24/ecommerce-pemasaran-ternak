@@ -45,10 +45,12 @@
                                         <td>Jumlah Pesan</td>
                                         <td>:</td>
                                         <td>
-                                             <form method="post" action="{{ url('pesan') }}/{{ $barang->id }}" >
+                                             <form id="orderForm" method="post" action="{{ url('pesan') }}/{{ $barang->id }}" >
                                             @csrf
                                                 <input type="text" name="jumlah_pesan" class="form-control" required="">
-                                                <button type="submit" class="btn btn-primary mt-2"><i class="fa fa-shopping-cart"></i> Masukkan Keranjang</button>
+                                                <button type="submit" class="btn btn-primary mt-2" id="orderBtn">
+                                                    <i class="fa fa-shopping-cart"></i> Masukkan Keranjang
+                                                </button>
                                             </form>
                                         </td>
                                     </tr>
@@ -65,3 +67,63 @@
     </div>
 </div>
 @endsection
+
+<script>
+document.getElementById('orderForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Validate form
+    if (!this.checkValidity()) {
+        this.reportValidity();
+        return;
+    }
+    
+    const jumlahPesan = document.querySelector('input[name="jumlah_pesan"]').value;
+    const stokTersedia = {{ $barang->stok }};
+    
+    // Check if order quantity exceeds available stock
+    if (parseInt(jumlahPesan) > stokTersedia) {
+        Swal.fire({
+            title: 'Stok Tidak Cukup!',
+            text: `Stok tersedia hanya ${stokTersedia} ekor, sedangkan Anda memesan ${jumlahPesan} ekor.`,
+            icon: 'warning',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'OK'
+        });
+        return;
+    }
+    
+    // Show confirmation dialog
+    Swal.fire({
+        title: 'Konfirmasi Pesanan',
+        text: `Anda akan memesan ${jumlahPesan} ekor ${$barang->nama_barang} dengan total harga Rp. ${(jumlahPesan * {{ $barang->harga }}).toLocaleString('id-ID')}`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Ya, Pesan Sekarang!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Show loading state
+            const orderBtn = document.getElementById('orderBtn');
+            
+            orderBtn.disabled = true;
+            orderBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Memproses...';
+            
+            // Show loading alert
+            Swal.fire({
+                title: 'Memproses Pesanan...',
+                text: 'Mohon tunggu sebentar',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            
+            // Submit the form
+            this.submit();
+        }
+    });
+});
+</script>

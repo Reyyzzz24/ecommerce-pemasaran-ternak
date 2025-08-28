@@ -48,7 +48,7 @@
             <div class="card">
                 <div class="card-body">
                     <h4><i class="fa fa-pencil-alt"></i> Edit Profile</h4>
-                    <form method="POST" action="{{ url('profile') }}">
+                    <form id="profileForm" method="POST" action="{{ url('profile') }}">
                         @csrf
 
                         <div class="form-group row">
@@ -131,8 +131,8 @@
 
                         <div class="form-group row mb-0 mt-4">
                             <div class="col-md-6 offset-md-2">
-                                <button type="submit" class="btn btn-primary">
-                                    Save
+                                <button type="submit" class="btn btn-primary" id="saveBtn">
+                                    <i class="fa fa-save"></i> Save
                                 </button>
                             </div>
                         </div>
@@ -143,4 +143,50 @@
         
     </div>
 </div>
+
+<script>
+document.getElementById('profileForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Validate form
+    if (!this.checkValidity()) {
+        this.reportValidity();
+        return;
+    }
+    
+    // Show confirmation dialog
+    Swal.fire({
+        title: 'Update Profile',
+        text: 'Apakah Anda yakin ingin mengupdate profile Anda?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Ya, Update!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Show loading state
+            const saveBtn = document.getElementById('saveBtn');
+            
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Menyimpan...';
+            
+            // Show loading alert
+            Swal.fire({
+                title: 'Menyimpan...',
+                text: 'Mohon tunggu sebentar',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            
+            // Submit the form
+            this.submit();
+        }
+    });
+});
+</script>
+
 @endsection

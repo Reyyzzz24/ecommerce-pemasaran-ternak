@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 use App\Models\Barang;
 use App\Models\Pesanan;
 use App\Models\User;
-use App\PesananDetail;
+use App\Models\PesananDetail;
 use Illuminate\Support\Facades\Auth;
-use Alert;
+use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
 
 class HistoryController extends Controller

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
-use Alert;
+use RealRashid\SweetAlert\Facades\Alert;
 use App\User;
 use Illuminate\Http\Request;
 /* use Illuminate\Support\Facades\Auth;
@@ -43,7 +43,7 @@ class ProfileController extends Controller
 
         $user->update();
 
-        Alert()->success('User Sukses diupdate', 'Success');
+        Alert::success('User Sukses diupdate', 'Success');
         return redirect('profile');
     }
 }

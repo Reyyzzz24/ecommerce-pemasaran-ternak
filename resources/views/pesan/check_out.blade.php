@@ -58,12 +58,12 @@
                                         <td class="text-end">{{ $pesanan_detail->barang ? 'Rp. ' . number_format($pesanan_detail->barang->harga) : '-' }}</td>
                                         <td class="text-end">Rp. {{ number_format($pesanan_detail->jumlah_harga) }}</td>
                                         <td class="text-center">
-                                            <form action="{{ url('check-out') }}/{{ $pesanan_detail->id }}" method="post" class="d-inline">
+                                            <button type="button" class="btn btn-danger btn-sm mb-1" onclick="confirmDeleteItem({{ $pesanan_detail->id }}, '{{ $pesanan_detail->barang ? $pesanan_detail->barang->nama_barang : 'Barang' }}')">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                            <form id="delete-form-{{ $pesanan_detail->id }}" action="{{ url('check-out') }}/{{ $pesanan_detail->id }}" method="post" style="display: none;">
                                                 @csrf
                                                 {{ method_field('DELETE') }}
-                                                <button type="submit" class="btn btn-danger btn-sm mb-1" onclick="return confirm('Anda yakin akan menghapus data ?');">
-                                                    <i class="fa fa-trash"></i>
-                                                </button>
                                             </form>
                                         </td>
                                     </tr>
@@ -72,7 +72,7 @@
                                         <td colspan="5" class="text-end"><strong>Total Harga :</strong></td>
                                         <td class="text-end"><strong>Rp. {{ number_format($pesanan->jumlah_harga) }}</strong></td>
                                         <td class="text-center">
-                                            <a href="{{ url('konfirmasi-check-out') }}" class="btn btn-success w-100 w-md-auto" onclick="return confirm('Anda yakin akan Check Out ?');">
+                                            <a href="{{ url('konfirmasi-check-out') }}" class="btn btn-success w-100 w-md-auto" onclick="confirmCheckout()">
                                                 <i class="fa fa-shopping-cart"></i> Check Out
                                             </a>
                                         </td>
@@ -87,3 +87,52 @@
     </div>
 </div>
 @endsection
+
+<script>
+function confirmDeleteItem(id, namaBarang) {
+    Swal.fire({
+        title: 'Hapus Item?',
+        text: `Anda yakin akan menghapus ${namaBarang} dari keranjang?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, Hapus!',
+        cancelButtonText: 'Batal',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Show loading state
+            Swal.fire({
+                title: 'Menghapus...',
+                text: 'Mohon tunggu sebentar',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            
+            // Submit the delete form
+            document.getElementById(`delete-form-${id}`).submit();
+        }
+    });
+}
+
+function confirmCheckout() {
+    Swal.fire({
+        title: 'Konfirmasi Check Out',
+        text: 'Anda yakin akan melakukan Check Out? Pesanan akan diproses dan tidak dapat dibatalkan.',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#28a745',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Ya, Check Out!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Redirect to checkout confirmation
+            window.location.href = '{{ url("konfirmasi-check-out") }}';
+        }
+    });
+}
+</script>

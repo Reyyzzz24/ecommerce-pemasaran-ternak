@@ -17,6 +17,10 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('js/sweetalert-utils.js') }}"></script>
 
 </head>
 
@@ -209,24 +213,9 @@
         </main>
     </div>
 
-    {{-- Footer global --}}
-    <footer class="bg-dark text-white text-center py-4 mt-auto">
-        <div class="footer-icons mb-3">
-            <a href="https://www.facebook.com/adang.pardiman/" class="mx-2" target="_blank" rel="noopener">
-                <i class="fa-brands fa-facebook" style="font-size: 1.25rem"></i>
-            </a>
-            <a href="https://www.youtube.com/@adangpardiman44" class="mx-2" target="_blank" rel="noopener">
-                <i class="fa-brands fa-youtube" style="font-size: 1.25rem;"></i>
-            </a>
-            <a href="https://www.tiktok.com/@user9061794311645" class="mx-2" target="_blank" rel="noopener">
-                <i class="fa-brands fa-tiktok" style="font-size: 1.25rem;"></i>
-            </a>
-        </div>
-        <p class="mb-0">&#169; 2025 ᴍᴀᴅᴇ ʙʏ ʀᴇᴠᴀ ʏᴜʟɪᴀɴ sᴀᴛʀɪᴀ</p>
-    </footer>
-
     {{-- SweetAlert --}}
-    @include('sweetalert::alert')
+
+
 </body>
 
 </html>

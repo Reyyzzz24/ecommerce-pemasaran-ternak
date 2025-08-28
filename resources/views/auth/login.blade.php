@@ -8,7 +8,7 @@
                 <div class="card-header">{{ __('Login') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
+                    <form id="loginForm" method="POST" action="{{ route('login') }}">
                         @csrf
 
                         <div class="row mb-3">
@@ -53,8 +53,8 @@
 
                         <div class="row mb-0">
                             <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Login') }}
+                                <button type="submit" class="btn btn-primary" id="loginBtn">
+                                    <i class="fa fa-sign-in-alt"></i> {{ __('Login') }}
                                 </button>
 
                                 @if (Route::has('password.request'))
@@ -71,3 +71,34 @@
     </div>
 </div>
 @endsection
+
+<script>
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Validate form
+    if (!this.checkValidity()) {
+        this.reportValidity();
+        return;
+    }
+    
+    // Show loading state
+    const loginBtn = document.getElementById('loginBtn');
+    
+    loginBtn.disabled = true;
+    loginBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Logging in...';
+    
+    // Show loading alert
+    Swal.fire({
+        title: 'Logging in...',
+        text: 'Mohon tunggu sebentar',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+    
+    // Submit the form
+    this.submit();
+});
+</script>

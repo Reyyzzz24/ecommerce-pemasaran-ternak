@@ -33,7 +33,7 @@
         @endif
 
         {{-- Form Tambah Barang --}}
-        <form action="{{ route('admin.barang.store') }}" method="POST" enctype="multipart/form-data">
+        <form id="createForm" action="{{ route('admin.barang.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="mb-3">
                 <label for="nama_barang" class="form-label">Nama Barang</label>
@@ -55,8 +55,56 @@
                 <label for="keterangan" class="form-label">Keterangan</label>
                 <textarea class="form-control" id="keterangan" name="keterangan" required></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">Tambah Barang</button>
+            <button type="submit" class="btn btn-primary" id="submitBtn">
+                <i class="fa fa-save"></i> Tambah Barang
+            </button>
         </form>
     </div>
 </div>
+
+<script>
+document.getElementById('createForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Validate form
+    if (!this.checkValidity()) {
+        this.reportValidity();
+        return;
+    }
+    
+    // Show confirmation dialog
+    Swal.fire({
+        title: 'Konfirmasi',
+        text: 'Apakah Anda yakin ingin menambahkan barang ini?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Ya, Tambahkan!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Show loading state
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.innerHTML;
+            
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Menyimpan...';
+            
+            // Show loading alert
+            Swal.fire({
+                title: 'Menyimpan...',
+                text: 'Mohon tunggu sebentar',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            
+            // Submit the form
+            this.submit();
+        }
+    });
+});
+</script>
 @endsection
