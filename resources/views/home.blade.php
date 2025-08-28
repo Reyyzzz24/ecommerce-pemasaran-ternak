@@ -154,21 +154,4 @@
         </div>
     </section>
     <!-- End of Contact -->
-
-    <!-- Footer -->
-    <footer class="bg-dark text-white text-center py-4 mt-5">
-        <div class="footer-icons mb-3">
-            <a href="https://www.facebook.com/adang.pardiman/" class="mx-2" target="_blank" rel="noopener">
-                <i class="fa-brands fa-facebook" style="font-size: 1.25rem"></i>
-    
-            <a href="https://www.youtube.com/@adangpardiman44" class="mx-2" target="_blank" rel="noopener">
-                <i class="fa-brands fa-youtube" style="font-size: 1.25rem;"></i>
-            </a>
-            <a href=https://www.tiktok.com/@user9061794311645" class="mx-2" target="_blank" rel="noopener">
-                <i class="fa-brands fa-tiktok" style="font-size: 1.25rem;"></i>
-            </a>
-        </div>
-        <p class="mb-0">&#169; 2025 ᴍᴀᴅᴇ ʙʏ ʀᴇᴠᴀ ʏᴜʟɪᴀɴ sᴀᴛʀɪᴀ</p>
-    </footer>
-    <!-- End of Footer -->
 @endsection
